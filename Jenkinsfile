@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+environment {
+    PATH = "${PATH}:${getTerraformPath()}"
+  }
     parameters {
         string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
@@ -21,7 +23,7 @@ pipeline {
                  script{
                         dir("terraform")
                         {
-                            git "https://github.com/troy-ingram/week-24-project.git"
+                            git "https://github.com/hafmoham/aws-terraform-jenkins-project.git"
                         }
                     }
                 }
@@ -87,4 +89,9 @@ pipeline {
     }
 
   }
+}
+
+def getTerraformPath(){
+  def tfHome = tool name: 'terraform-12', type: 'org.jenkinsci.plugins.terraform.TerraformInstallation'
+  return tfHome
 }
